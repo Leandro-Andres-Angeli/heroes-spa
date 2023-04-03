@@ -9,8 +9,9 @@ const LoginScreen = ({ history }) => {
     // history.push('/');
     // history.replace('/');
     const action={type:types.login,payload:{name:"Leandro"} }
+    const lastPath =localStorage.getItem("lastPath")|| '/'
     dispatch(action)
-      history.replace('/');
+      history.replace(lastPath);
   };
   return (
     <div className='container mt-5'>
