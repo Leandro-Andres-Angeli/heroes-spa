@@ -1,14 +1,30 @@
-import React from 'react';
-import { heroes } from '../../data/heroes';
-import { HeroCard } from '../heroes/HeroCard';
+import React, { useEffect } from 'react';
 
-export const SearchScreen = () => {
-  const heroesFiltered = heroes;
+import { HeroCard } from '../heroes/HeroCard';
+import { useLocation } from 'react-router-dom';
+import { getHeroByName } from '../../selectors/getHeroeByName';
+
+import { useState } from 'react';
+
+export const SearchScreen = ({ history }) => {
+  const [heroesFiltered, setHeroesFiltered] = useState([]);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    setHeroesFiltered(getHeroByName(query));
+  }, [query]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const { hero: heroSearch } = Object.fromEntries(new FormData(e.target));
-    console.log(heroSearch);
+
+    history.push(`?q=${heroSearch}`);
+    const params = new URLSearchParams(window.location.search);
+
+    setQuery(params.get('q'));
+
+    e.target.reset();
   };
   return (
     <div>
@@ -30,11 +46,15 @@ export const SearchScreen = () => {
           </form>
         </div>
         <div className='col-7'>
-          <h4>Resuts</h4>
-          <hr />
-          {heroesFiltered.map((hero) => (
-            <HeroCard key={hero.id} {...{ ...hero }}></HeroCard>
-          ))}
+          {(heroesFiltered.length > 0 && (
+            <>
+              <h4>Results</h4>
+              <hr />
+              {heroesFiltered.map((hero) => (
+                <HeroCard key={hero.id} {...{ ...hero }}></HeroCard>
+              ))}
+            </>
+          )) || <div className='alert alert-info'> Search for a Hero</div>}
         </div>
       </div>
     </div>
