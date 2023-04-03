@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { HeroCard } from '../heroes/HeroCard';
-import { useLocation } from 'react-router-dom';
+
 import { getHeroByName } from '../../selectors/getHeroeByName';
 
 import { useState } from 'react';

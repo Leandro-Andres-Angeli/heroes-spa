@@ -1,9 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AuthContext } from '../../auth/AuthContext';
+import { types } from '../../types/types';
 
 const LoginScreen = ({ history }) => {
+  const {dispatch} = useContext(AuthContext)
+  // console.log(context)
   const handleLogin = () => {
     // history.push('/');
-    history.replace('/');
+    // history.replace('/');
+    const action={type:types.login,payload:{name:"Leandro"} }
+    dispatch(action)
+      history.replace('/');
   };
   return (
     <div className='container mt-5'>
