@@ -4,7 +4,12 @@ import { HeroCard } from '../heroes/HeroCard';
 
 export const SearchScreen = () => {
   const heroesFiltered = heroes;
-  const handleSubmit = () => {};
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const { hero: heroSearch } = Object.fromEntries(new FormData(e.target));
+    console.log(heroSearch);
+  };
   return (
     <div>
       <h1> SearchScreen</h1>
@@ -17,6 +22,7 @@ export const SearchScreen = () => {
               type='text'
               placeholder='find your hero'
               className='form-control'
+              name='hero'
             />
             <button type='submit' className='mt-3 btn btn-outline-primary'>
               search
