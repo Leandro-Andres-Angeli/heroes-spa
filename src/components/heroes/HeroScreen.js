@@ -30,7 +30,7 @@ function HeroScreen({ history }) {
   } = hero;
   return (
     <div className='row mt-5'>
-      <div className='col-4 '>
+      <div className='col-4 animate__animated animate__slideInLeft'>
         <img
           src={`../assets/heroes/${id}.jpg`}
           alt={superhero}
