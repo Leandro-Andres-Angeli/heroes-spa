@@ -1,18 +1,39 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 
+//       
+
+
+import { useLocation } from 'react-router-dom';
+import { getHeroByName } from '../../selectors/getHeroByName';
 import { HeroCard } from '../heroes/HeroCard';
+const customComparator = (prevProps, nextProps) => {
+  console.log(prevProps)
+  console.log(nextProps)
+  console.log("fuction")
+  return nextProps.heroesFiltered === prevProps.heroesFiltered;
+};
 
-import { getHeroByName } from '../../selectors/getHeroeByName';
-
-import { useState } from 'react';
-
+const HeroList =({ heroesFiltered,qVal }) => {
+  
+  return (<div className='col-7'>
+    {(heroesFiltered.length > 0 && (
+      <>
+        <h4>Results</h4>
+        <hr />
+        {heroesFiltered.map((hero) => (
+          <HeroCard key={hero.id} {...{ ...hero }}></HeroCard>
+        ))}
+      </>
+    )) || <div className={`alert ${qVal === '' ? 'alert-info' :"alert-danger"} `}> {qVal === '' ? 'search for hero' :"hero not found"}</div>}
+  </div>)
+}
 export const SearchScreen = ({ history }) => {
-  const [heroesFiltered, setHeroesFiltered] = useState([]);
-  const [query, setQuery] = useState('');
 
-  useEffect(() => {
-    setHeroesFiltered(getHeroByName(query));
-  }, [query]);
+
+  const location = useLocation()
+  const qVal = useMemo(() => new URLSearchParams(location.search).get("q"), [location.search]);
+  const heroesFiltered = useMemo(() => getHeroByName(qVal), [qVal])
+  console.log(qVal)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -20,9 +41,7 @@ export const SearchScreen = ({ history }) => {
     const { hero: heroSearch } = Object.fromEntries(new FormData(e.target));
 
     history.push(`?q=${heroSearch}`);
-    const params = new URLSearchParams(window.location.search);
 
-    setQuery(params.get('q'));
 
     e.target.reset();
   };
@@ -45,17 +64,7 @@ export const SearchScreen = ({ history }) => {
             </button>
           </form>
         </div>
-        <div className='col-7'>
-          {(heroesFiltered.length > 0 && (
-            <>
-              <h4>Results</h4>
-              <hr />
-              {heroesFiltered.map((hero) => (
-                <HeroCard key={hero.id} {...{ ...hero }}></HeroCard>
-              ))}
-            </>
-          )) || <div className='alert alert-info'> Search for a Hero</div>}
-        </div>
+        <HeroList {...{ heroesFiltered,qVal }}></HeroList>
       </div>
     </div>
   );
